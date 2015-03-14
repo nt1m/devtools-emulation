@@ -1,4 +1,4 @@
-<svg viewBox="0 0 23 23" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 23 23" width="16" height="16" xmlns="http://www.w3.org/2000/svg">
 	<!-- TODO : This image is from Opera, it should be replaced later -->
 	<path d="M15 13h-13v-7h14v2.011c.419-.317.934-.511 1.5-.511h.5v-2.5c0-.552-.448-1-1-1h-16c-.552 0-1 .448-1 1v9c0 .552.448 1 1 1h14v-2zm-.5 5h-2.5l-1-2h-4l-1 2h-2.5c-.276 0-.5.224-.5.5s.224.5.5.5h11c.276 0 .5-.224.5-.5s-.224-.5-.5-.5zm6.5-7v7h-3v-7h3zm0-2h-3c-1.105 0-2 .895-2 2v7c0 1.105.895 2 2 2h3c1.105 0 2-.895 2-2v-7c0-1.105-.895-2-2-2z" fill="#eef0f2"/>
 </svg>
