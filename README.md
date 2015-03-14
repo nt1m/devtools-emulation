@@ -1,13 +1,8 @@
-Prototyper for Firefox DevTools
-===============================
+Emulation panel for Firefox DevTools
+====================================
 
 ## What is this ?
-This is an add-on that adds JSFiddle style prototyping to Firefox DevTools.
-
-AMO : https://addons.mozilla.org/en-US/firefox/addon/devtools-prototyper/
-
-## Compatibility
-Only tested with Firefox 33 and Firefox 36.
+Prototype for an emulation tool in Fx DevTools.
 
 ## How to contribute ?
 Pull requests :)
