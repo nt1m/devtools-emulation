@@ -96,7 +96,9 @@ EmulationPanel.prototype = {
 		if (ResponsiveUIManager.isActiveForTab(tab)) {
 			ResponsiveUIManager.toggle(tab.ownerGlobal, tab);
 		}
-		this.resetUA();
+		if (this.isUASpoofed) {
+			this.resetUA();
+		}
 		this.resetPixelRatio();
 	},
 
@@ -124,11 +126,11 @@ EmulationPanel.prototype = {
 	getOldUA: function() {
 		if (Services.prefs.getPrefType(UA_PREF) == 0) {
 			this.oldUA = this.win.navigator.userAgent;
-			this.isUASpoofed = false;
+			this.isUASpoofedByDefault = false;
 		}
 		else {
-			this.oldUA = this.storage.get(UA_PREF, false);
-			this.isUASpoofed = true;
+			this.oldUA = this.prefs.get(UA_PREF, false);
+			this.isUASpoofedByDefault = true;
 		}
 		this.UAInput.placeholder = this.oldUA;
 	},
@@ -138,23 +140,25 @@ EmulationPanel.prototype = {
 			this.resetUA();
 			return;
 		}
-		this.storage.set(UA_PREF, value, false);
+		this.prefs.set(UA_PREF, value, false);
 		this.UAInput.value = value;
+		this.isUASpoofed = true;
 		this.target.activeTab.reload();
 	},
 
 	resetUA: function() {
-		if (this.isUASpoofed) {
-			this.storage.set(UA_PREF, this.oldUA, false);
+		if (this.isUASpoofedByDefault) {
+			this.prefs.set(UA_PREF, this.oldUA, false);
 		}
 		else {
 			Services.prefs.clearUserPref(UA_PREF);
 		}
 		this.UAInput.value = "";
+		this.isUASpoofed = false;
 		this.target.activeTab.reload();
 	},
 
-	storage: {
+	prefs: {
 		get: function(pref, HasPrefix = true) {
 			if(HasPrefix) {
 				var prefname = prefPrefix + pref;
