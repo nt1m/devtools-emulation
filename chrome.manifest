@@ -1,0 +1,5 @@
+content devtools-emulation       chrome/
+skin    devtools-emulation       classic/1.0 skin/
+
+locale  devtools-emulation en-US locale/en-US/
+locale  devtools-emulation fr    locale/fr/

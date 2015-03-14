@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html [
+	<!ENTITY % emulationDTD SYSTEM "chrome://devtools-emulation/locale/strings.dtd">
+	%emulationDTD;
+]>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:xul="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
+<head>
+	<link rel="stylesheet" type="text/css" href="chrome://devtools-emulation/skin/panel.css"/>
+	<script type="application/javascript;version=1.8" src="chrome://browser/content/devtools/theme-switching.js"></script>
+</head>
+<body class="theme-body">
+	<div class="column">
+		<h1>Devices</h1>
+		<select id="devices-select" class="devtools-menulist">
+			<option id="default-device-option">Default</option>
+			<optgroup label="Phones" data-devices="phones"></optgroup>
+			<optgroup label="Tablets" data-devices="tablets"></optgroup>
+			<optgroup label="Watches" data-devices="watches"></optgroup>
+			<optgroup label="Notebooks" data-devices="notebooks"></optgroup>
+			<optgroup label="TVs" data-devices="televisions"></optgroup>
+		</select>
+	</div>
+	<div class="column">
+		<h1>User Agent</h1>
+		<input type="text" class="devtools-textinput" id="user-agent-input"/>
+		<h1>Pixel ratio</h1>
+		<input type="number" step="any" class="devtools-textinput" id="pixel-ratio-input" placeholder="Default" min="0"/>
+	</div>
+</body>
+</html>

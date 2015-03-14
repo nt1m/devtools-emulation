@@ -1,0 +1,45 @@
+body, select, input {
+	font: message-box;
+}
+
+body {
+	display: flex;
+}
+
+h1 {
+	font-weight: normal;
+	font-size: 1.5em;
+}
+
+.column {
+	flex: 1;
+	padding: 0 2em;
+}
+
+.column .devtools-textinput {
+	width: 100%;
+}
+
+.devtools-menulist {
+	background-image: url(chrome://browser/skin/devtools/dropmarker.svg) !important;
+	background-position: right 10px center !important;
+	background-repeat: no-repeat !important;
+	border: 1px solid var(--theme-splitter-color) !important;
+}
+
+/* Icons */
+.devtools-icon {
+	overflow: hidden;
+}
+.devtools-icon.run::after {
+	background-image: url("images/run.svg");
+}
+#run-button .devtools-icon.run::after {
+	background-image: url("images/run.svg#white");
+}
+#export-button .devtools-icon.save::after {
+	background-image: url("images/save.svg");
+}
+.theme-dark #export-button .devtools-icon.save::after {
+	background-image: url("images/save.svg#white");
+}
