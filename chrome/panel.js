@@ -53,16 +53,16 @@ EmulationPanel.prototype = {
 	},
 
 	populateDevicesList: function() {
-		let devices = devtools("devtools/shared/devices").Devices;
-		for (let type of devices.Types) {
-			let optgroup = this.devicesSelect.querySelector("optgroup[data-devices='" + type + "']");
-			for (let device of devices.FirefoxOS[type]) {
-				this.appendDeviceOption(device, optgroup);
-			}
-			for (let device of devices.Others[type]) {
-				this.appendDeviceOption(device, optgroup);
-			}
-		}
+		devtools("devtools/shared/devices").GetDevices().then(devices => {
+          for (let type of devices.TYPES) {
+              let optgroup = this.doc.createElement("optgroup");
+              optgroup.label = type.charAt(0).toUpperCase() + type.slice(1);
+              this.devicesSelect.appendChild(optgroup);
+              for (let device of devices[type]) {
+                  this.appendDeviceOption(device, optgroup);
+              }
+          }
+        });
 	},
 
 	appendDeviceOption: function(device, optgroup) {
