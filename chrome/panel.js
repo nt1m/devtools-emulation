@@ -8,7 +8,6 @@ const Editor  = devtools("devtools/sourceeditor/editor");
 Cu.import("resource://gre/modules/Services.jsm");
 Cu.import("resource:///modules/devtools/responsivedesign.jsm");
 
-// Constants
 const prefPrefix = "extensions.devtools-emulation.";
 const UA_PREF = "general.useragent.override";
 
@@ -26,13 +25,12 @@ function EmulationPanel(win, toolbox) {
 }
 
 EmulationPanel.prototype = {
-	// Destroy function
-	destroy: function() {
+	destroy() {
 		this.win = this.doc = this.toolbox = this.mm = null;
 		this.resetDevice();
 	},
 
-	init: function() {
+	init() {
 		this.UAInput = this.doc.querySelector("#user-agent-input");
 		this.UAInput.addEventListener("change", () => {
 			this.switchUA(this.UAInput.value);
@@ -52,7 +50,7 @@ EmulationPanel.prototype = {
 		this.win.console.log(this.target);
 	},
 
-	populateDevicesList: function() {
+	populateDevicesList() {
 		devtools("devtools/shared/devices").GetDevices().then(devices => {
           for (let type of devices.TYPES) {
               let optgroup = this.doc.createElement("optgroup");
@@ -65,7 +63,7 @@ EmulationPanel.prototype = {
         });
 	},
 
-	appendDeviceOption: function(device, optgroup) {
+	appendDeviceOption(device, optgroup) {
 		let option = this.doc.createElement("option");
 		option.textContent = device.name;
 		for (let data in device) {
@@ -74,7 +72,7 @@ EmulationPanel.prototype = {
 		optgroup.appendChild(option);
 	},
 
-	setDevice: function(option) {
+	setDevice(option) {
 		if (option.id == "default-device-option") {
 			this.resetDevice();
 			return;
@@ -91,7 +89,7 @@ EmulationPanel.prototype = {
 		this.setPixelRatio(props.pixelRatio);
 	},
 
-	resetDevice: function() {
+	resetDevice() {
 		let tab = this.target.tab;
 		if (ResponsiveUIManager.isActiveForTab(tab)) {
 			ResponsiveUIManager.toggle(tab.ownerGlobal, tab);
@@ -102,7 +100,7 @@ EmulationPanel.prototype = {
 		this.resetPixelRatio();
 	},
 
-	setPixelRatio: function(value) {
+	setPixelRatio(value) {
 		if (value == "") {
 			this.resetPixelRatio();
 			return;
@@ -116,14 +114,14 @@ EmulationPanel.prototype = {
 		fullzoom._applyPrefToZoom(value, win.gBrowser.selectedBrowser);
 	},
 
-	resetPixelRatio: function() {
+	resetPixelRatio() {
 		this.PixelRatioInput.value = "";
 		let win = this.target.tab.ownerGlobal;
 		let fullzoom = winl.FullZoom;
 		fullzoom._removePref(win.gBrowser.selectedBrowser);
 	},
 
-	getOldUA: function() {
+	getOldUA() {
 		if (Services.prefs.getPrefType(UA_PREF) == 0) {
 			this.oldUA = this.win.navigator.userAgent;
 			this.isUASpoofedByDefault = false;
@@ -135,7 +133,7 @@ EmulationPanel.prototype = {
 		this.UAInput.placeholder = this.oldUA;
 	},
 
-	switchUA: function(value) {
+	switchUA(value) {
 		if (value == "") {
 			this.resetUA();
 			return;
@@ -146,7 +144,7 @@ EmulationPanel.prototype = {
 		this.target.activeTab.reload();
 	},
 
-	resetUA: function() {
+	resetUA() {
 		if (this.isUASpoofedByDefault) {
 			this.prefs.set(UA_PREF, this.oldUA, false);
 		}
@@ -159,7 +157,7 @@ EmulationPanel.prototype = {
 	},
 
 	prefs: {
-		get: function(pref, HasPrefix = true) {
+		get(pref, HasPrefix = true) {
 			if(HasPrefix) {
 				var prefname = prefPrefix + pref;
 			}
@@ -175,7 +173,7 @@ EmulationPanel.prototype = {
 			}
 			return Services.prefs.getCharPref(prefname);
 		},
-		set: function(pref, value, HasPrefix = true) {
+		set(pref, value, HasPrefix = true) {
 			if(HasPrefix) {
 				var prefname = prefPrefix + pref;
 			}
@@ -184,7 +182,7 @@ EmulationPanel.prototype = {
 			}
 			Services.prefs.setCharPref(prefname, value);
 		},
-		enablePrefSync: function(pref) {
+		enablePrefSync(pref) {
 			let syncPrefPrefix = "services.sync.prefs.sync.";
 			Services.prefs.setBoolPref(syncPrefPrefix + prefPrefix + pref, true)
 		}
