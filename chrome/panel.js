@@ -1,12 +1,13 @@
 "use strict";
 
-// Import stuff
 const { classes: Cc, interfaces: Ci, utils: Cu, results: Cr } = Components;
 const devtools = Cu.import("resource://gre/modules/devtools/Loader.jsm", {}).devtools.require;
 const {Promise: promise} = Cu.import("resource://gre/modules/Promise.jsm", {});
 const Editor  = devtools("devtools/sourceeditor/editor");
+
 Cu.import("resource://gre/modules/Services.jsm");
 Cu.import("resource:///modules/devtools/responsivedesign.jsm");
+Cu.import("resource:///modules/devtools/DeveloperToolbar.jsm");
 
 const prefPrefix = "extensions.devtools-emulation.";
 const UA_PREF = "general.useragent.override";
@@ -18,7 +19,7 @@ function EmulationPanel(win, toolbox) {
 	this.doc = this.win.document;
 	this.toolbox = toolbox;
 	this.target = this.toolbox.target;
-	
+
 	this.switchUA = this.switchUA.bind(this);
 
 	this.init();
@@ -42,25 +43,30 @@ EmulationPanel.prototype = {
 			this.setPixelRatio(this.PixelRatioInput.value);
 		});
 
+		this.mediaSelect = this.doc.querySelector("#media-select");
+		this.populateMediaSelect();
+		this.mediaSelect.addEventListener("change", () => {
+			this.setMediaQuery(this.mediaSelect.value);
+		});
+
 		this.devicesSelect = this.doc.querySelector("#devices-select");
 		this.devicesSelect.addEventListener("change", () => {
 			this.setDevice(this.devicesSelect.options[this.devicesSelect.selectedIndex]);
 		});
 		this.populateDevicesList();
-		this.win.console.log(this.target);
 	},
 
 	populateDevicesList() {
 		devtools("devtools/shared/devices").GetDevices().then(devices => {
-          for (let type of devices.TYPES) {
-              let optgroup = this.doc.createElement("optgroup");
-              optgroup.label = type.charAt(0).toUpperCase() + type.slice(1);
-              this.devicesSelect.appendChild(optgroup);
-              for (let device of devices[type]) {
-                  this.appendDeviceOption(device, optgroup);
-              }
-          }
-        });
+			for (let type of devices.TYPES) {
+				let optgroup = this.doc.createElement("optgroup");
+				optgroup.label = type.charAt(0).toUpperCase() + type.slice(1);
+				this.devicesSelect.appendChild(optgroup);
+				for (let device of devices[type]) {
+					this.appendDeviceOption(device, optgroup);
+				}
+			}
+		});
 	},
 
 	appendDeviceOption(device, optgroup) {
@@ -98,6 +104,36 @@ EmulationPanel.prototype = {
 			this.resetUA();
 		}
 		this.resetPixelRatio();
+	},
+
+	populateMediaSelect() {
+		let values = ["braille", "embossed", "handheld", "print", "projection",
+					  "screen", "speech", "tty", "tv"];
+		let defaultOption = this.doc.createElement("option");
+		defaultOption.innerHTML = "Default";
+		defaultOption.value = "";
+		this.mediaSelect.appendChild(defaultOption);
+
+		for (let value of values) {
+			let option = this.doc.createElement("option");
+			option.value = option.innerHTML = value;
+			this.mediaSelect.appendChild(option);
+		}
+	},
+
+	setMediaQuery(value) {
+		let command;
+		if (!value || value == "") {
+			command = "media reset";
+		}
+		else {
+			command = "media emulate " + value;
+		}
+		CommandUtils.createRequisition(this.target, {
+			environment: CommandUtils.createEnvironment(this, "target")
+		}).then(requisition => {
+			requisition.updateExec(command);
+		});
 	},
 
 	setPixelRatio(value) {
