@@ -1,30 +1,28 @@
 "use strict";
 
 const { classes: Cc, interfaces: Ci, utils: Cu, results: Cr } = Components;
-const devtools = Cu.import("resource://gre/modules/devtools/Loader.jsm", {}).devtools.require;
+const {require} = Cu.import("resource://devtools/shared/Loader.jsm", {});
 const {Promise: promise} = Cu.import("resource://gre/modules/Promise.jsm", {});
-const Editor  = devtools("devtools/sourceeditor/editor");
+const Editor  = require("devtools/client/sourceeditor/editor");
+const {CommandUtils} = require("devtools/client/shared/developer-toolbar");
+const { GetDevices } = require("devtools/client/shared/devices");
 
 Cu.import("resource://gre/modules/Services.jsm");
-Cu.import("resource:///modules/devtools/responsivedesign.jsm");
-Cu.import("resource:///modules/devtools/DeveloperToolbar.jsm");
+Cu.import("resource://devtools/client/responsivedesign/responsivedesign.jsm");
 
 const prefPrefix = "extensions.devtools-emulation.";
 const UA_PREF = "general.useragent.override";
 
-this.EXPORTED_SYMBOLS = ["EmulationPanel"];
-
 function EmulationPanel(win, toolbox) {
-	this.win = win;
-	this.doc = this.win.document;
-	this.toolbox = toolbox;
-	this.target = this.toolbox.target;
+  this.win = win;
+  this.doc = this.win.document;
+  this.toolbox = toolbox;
+  this.target = this.toolbox.target;
 
-	this.switchUA = this.switchUA.bind(this);
+  this.switchUA = this.switchUA.bind(this);
 
-	this.init();
+  this.init();
 }
-
 EmulationPanel.prototype = {
 	destroy() {
 		this.win = this.doc = this.toolbox = this.mm = null;
@@ -57,7 +55,7 @@ EmulationPanel.prototype = {
 	},
 
 	populateDevicesList() {
-		devtools("devtools/shared/devices").GetDevices().then(devices => {
+		GetDevices().then(devices => {
 			for (let type of devices.TYPES) {
 				let optgroup = this.doc.createElement("optgroup");
 				optgroup.label = type.charAt(0).toUpperCase() + type.slice(1);
@@ -221,6 +219,7 @@ EmulationPanel.prototype = {
 		enablePrefSync(pref) {
 			let syncPrefPrefix = "services.sync.prefs.sync.";
 			Services.prefs.setBoolPref(syncPrefPrefix + prefPrefix + pref, true)
-		}
-	}
+		},
+	},
 };
+this.EXPORTED_SYMBOLS = ["EmulationPanel"];

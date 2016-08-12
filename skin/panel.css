@@ -21,7 +21,7 @@ h1 {
 }
 
 .devtools-menulist {
-	background-image: url(chrome://browser/skin/devtools/dropmarker.svg) !important;
+	background-image: url(chrome://devtools/skin/images/dropmarker.svg) !important;
 	background-position: right 10px center !important;
 	background-repeat: no-repeat !important;
 	border: 1px solid var(--theme-splitter-color) !important;
